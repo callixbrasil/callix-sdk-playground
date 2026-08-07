@@ -92,13 +92,13 @@ entre si.
 
 Toda a aplicação é uma função de `useCallOperatorState().state`:
 
-| Estado | Significado | O que a interface mostra |
+| Estado | Significado | O que a interface faz / pode fazer |
 | --- | --- | --- |
 | `starting` | operador subindo (SIP + configs) | tela de carregamento |
 | `idle` | disponível, aguardando chamada | discador |
 | `onBreak` | em pausa | pausa atual, discador bloqueado |
 | `offline` | desconectado do serviço | botão de ficar disponível |
-| `callRinging` | chamada entrante tocando | atender / rejeitar |
+| `callRinging` | chamada de campanha tocando | atender / rejeitar |
 | `manualCallSetup` / `manualCallRinging` | chamada manual sendo montada / chamando | cancelar |
 | `callInProgress` | conversa estabelecida | espera, desligar, áudio, dados da chamada |
 | `afterCall` | pós-atendimento | resultado + qualificação |
@@ -117,47 +117,3 @@ React via `useSyncExternalStore` — é assim que o cabeçalho mostra o tenant e
 estados.
 
 ---
-
-## Notas de implementação
-
-- **Volume de saída** — `useCallOperatorAudioOutputVolume` opera na faixa `0..1`. É o que esta aplicação usa.
-- **`goOffline()` vs `stop()`** — `goOffline` mantém o operador vivo (dá para voltar com `becomeAvailable`); `stop()` é terminal e exige `start()` de novo. O `CallixClientProvider` já cuida do ciclo de vida — não chame `stop()` na mão.
-- **`CallInfo` cobre `campaign` e `manual`** — chamada receptiva de fila não tem tipo próprio; o contexto disponível vem de `call.data` (`callQueueId`, `inboundNumberPhone`).
-- **Um evento público** — `userSessionDropped` é o único em `CallOperatorPublicEvents`; qualquer outra observabilidade sai de estado e signals.
-- **Execução em browser** — o `client-sdk` empacota jsSIP/WebRTC. Todos os componentes que o tocam são `'use client'` e o provider só monta depois que o token chega, o que evita quebrar no SSR.
-- **O operador fica disponível automaticamente** — `starting` vai direto para `idle` sem nenhum comando. Abrir a página coloca o usuário online e elegível a receber chamada de campanha. Se a sua aplicação não quiser esse efeito, chame `goOffline()` ou `enterOnBreak()` assim que o estado sair de `starting`.
-
----
-
-## Validado contra tenant real
-
-Executado contra um tenant real, em agosto de 2026.
-
-Medido via Chrome headless com mídia fake:
-
-| Verificação | Resultado |
-| --- | --- |
-| `createUserSessionForClientSdk` | HTTP 200, devolve token + `{ id, login, name, sessionId }` |
-| `starting → idle` | ~2s após montar o provider |
-| Pausas do tenant | carregadas automaticamente, com id e nome |
-| `enterOnBreak(id)` | `idle → onBreak`, chaves `onBreak.idle · onBreak` |
-| `becomeAvailable()` | `onBreak → idle` |
-| `goOffline()` | `idle → offline`, chaves `offline.idle · offline` |
-
-Ciclo de chamada validado em teste manual com discagem real:
-
-| Verificação | Resultado |
-| --- | --- |
-| `makeManualCall()` → chamada estabelecida | ok |
-| Painel de chamada (`callInProgress`) | renderizou com dados reais |
-| `afterCall` com qualificações do tenant | ok, lista populada e envio aceito |
-
----
-
-## Comandos
-
-```bash
-npm run dev          # desenvolvimento na porta 3333
-npm run build        # build de produção
-npm run checktypes   # tsc --noEmit
-```
