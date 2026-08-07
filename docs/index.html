@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex" />
 <title>SDK Callix — conceitos e capacidades</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAAg1JREFUeAHtmU1SwkAQhV8sq3TJEXIEvEG4Ad4AV+oOTwCeQNzpCj0B5QngBnoDxxuwhI2xO8QFv+nJdGfKkq8qRYoM8F4y09PdJIhIfpt18Y0xErTWL2CUPM/uJN9xgpjk6G6JZxL0ISSuAQWOBjbJb7IUDaJmIO9nLVqU73T6SSbGaAgVAyweS0xpUbbLt3pNmQg2sEP8L738OnuAMeFPYInBDvErKBzSkxjAEI0plFZcH1qaCDdwhiu60x8Vo8xMBBtIRrM5mejEMqEShQoTOS7p1FUMVTehtg8kTzNHLx00bEJ1J45hIoEBZToxRVWEyjHfmY2iuBkibSbJnPhJ7BFPvECIWTbqMZ02cTiHqJhhTNPpGiaK8UVUk/4GGkC4JhxY/Mq0GC8DpZAM9Ujp2Bd5HGqIZ07hR3Vk8cehpnjGdw2k0MUhQDwTsyZ2CBTPHIv6AFI6pqFNAF8DDrqkCDTx58Po/9rI6iDOTFc4eJowXcSe4lGMSzApWjVCzAzUEF9+kFo0C0ykw00MeBU0u8kgxKq5K7nz9zRd3hCIqgEf8bRQh1BArzsdQTyj152OIJ7R605HEM/4FjTbLMAt9HbFKBPxjMYU+qq4biaeCTdwjtGBxu6jpXjGsjv9SuLF//fWRa87vW6CxffQAOGLuKRsRl3wfhBa5/qgnko0KZ45FvWxiWvgQPiFkB/ZodNz5wQOaQAAAABJRU5ErkJggg==" />
 <style>
   :root {
     --ground: #f2f5f5;
@@ -548,7 +549,7 @@
     <dl class="colophon">
       <div><dt>Versão do SDK</dt><dd>client 1.0.1 · server 1.0.0</dd></div>
       <div><dt>Público</dt><dd>Times de produto e engenharia</dd></div>
-      <div><dt>Base</dt><dd>Pacotes publicados e execução validada</dd></div>
+      <div><dt>Aplicação de referência</dt><dd><a href="https://github.com/callixbrasil/callix-sdk-playground">callix-sdk-playground</a></dd></div>
       <div><dt>Data</dt><dd>Agosto de 2026</dd></div>
     </dl>
   </header>
@@ -614,7 +615,7 @@
       </div>
       <div class="cap">
         <h4>Controles de chamada</h4>
-        <p>Atender, rejeitar, desligar, colocar e tirar de espera, mudo de entrada e de saída, volume.</p>
+        <p>Iniciar, atender, rejeitar, desligar, colocar e tirar de espera, mudo de entrada e de saída, volume.</p>
       </div>
       <div class="cap">
         <h4>Contexto de campanha</h4>
@@ -1125,6 +1126,16 @@ if (estado.state === 'callRinging') return &lt;FichaDoCliente ... /&gt;;</pre>
       <li><strong>Execução em browser.</strong> Depende de WebRTC e de microfone; não atende cenários de automação sem interface.</li>
       <li><strong>Mobile via WebView.</strong> O exemplo React Native de referência não integra o SDK nativamente — ele carrega a aplicação web dentro de uma WebView. É um caminho funcional, distinto de um app nativo.</li>
     </ul>
+
+    <div class="note">
+      <p class="note-label">Faltou alguma capacidade?</p>
+      <p>
+        Se o caso de uso do seu projeto não é coberto pelo que está descrito aqui — receptivo de fila, outro
+        canal, uma capacidade que fez falta — escreva para
+        <a href="mailto:produtos@callix.com.br?subject=Caso%20de%20uso%20-%20SDK">produtos@callix.com.br</a>
+        com o assunto <strong>Caso de uso - SDK</strong>.
+      </p>
+    </div>
   </section>
 
   <!-- ============================================ -->
@@ -1241,8 +1252,7 @@ if (estado.state === 'callRinging') return &lt;FichaDoCliente ... /&gt;;</pre>
 
   <footer>
     Documento técnico · Plataforma Callix · agosto de 2026<br />
-    Elaborado a partir dos pacotes publicados @callixbrasil (typings 1.0.1), do repositório de exemplos oficial
-    e da execução de uma aplicação de demonstração em ambiente de homologação.
+    
   </footer>
 
 </div>
