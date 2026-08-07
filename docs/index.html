@@ -1,0 +1,1210 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>SDK Callix — conceitos e capacidades</title>
+<style>
+  :root {
+    --ground: #f2f5f5;
+    --surface: #ffffff;
+    --surface-2: #e8eded;
+    --ink: #101a1c;
+    --ink-2: #45585b;
+    --ink-3: #6f8285;
+    --line: #d3dcdc;
+    --line-strong: #b3c1c2;
+    --accent: #0b6e75;
+    --accent-soft: #daecec;
+    --ok: #1c7a4f;
+    --ok-soft: #d8ede2;
+    --warn: #8a5a05;
+    --warn-soft: #f6e8cf;
+    --call: #1a5aa8;
+    --call-soft: #dbe7f7;
+    --bad: #a33124;
+    --bad-soft: #f6ddd9;
+    --off: #5b6b6d;
+    --off-soft: #e2e8e8;
+
+    --serif: ui-serif, "Iowan Old Style", "Charter", Georgia, "Times New Roman", serif;
+    --sans: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #0c1416;
+      --surface: #121d1f;
+      --surface-2: #182629;
+      --ink: #e7eeed;
+      --ink-2: #aebbbb;
+      --ink-3: #86999a;
+      --line: #24373a;
+      --line-strong: #375054;
+      --accent: #56b6bb;
+      --accent-soft: #10353a;
+      --ok: #63c493;
+      --ok-soft: #10301f;
+      --warn: #dfae5c;
+      --warn-soft: #33270e;
+      --call: #7fb0e8;
+      --call-soft: #12253d;
+      --bad: #e59084;
+      --bad-soft: #3a1a16;
+      --off: #93a5a6;
+      --off-soft: #1c2a2c;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #0c1416;
+    --surface: #121d1f;
+    --surface-2: #182629;
+    --ink: #e7eeed;
+    --ink-2: #aebbbb;
+    --ink-3: #86999a;
+    --line: #24373a;
+    --line-strong: #375054;
+    --accent: #56b6bb;
+    --accent-soft: #10353a;
+    --ok: #63c493;
+    --ok-soft: #10301f;
+    --warn: #dfae5c;
+    --warn-soft: #33270e;
+    --call: #7fb0e8;
+    --call-soft: #12253d;
+    --bad: #e59084;
+    --bad-soft: #3a1a16;
+    --off: #93a5a6;
+    --off-soft: #1c2a2c;
+  }
+
+  :root[data-theme="light"] {
+    --ground: #f2f5f5;
+    --surface: #ffffff;
+    --surface-2: #e8eded;
+    --ink: #101a1c;
+    --ink-2: #45585b;
+    --ink-3: #6f8285;
+    --line: #d3dcdc;
+    --line-strong: #b3c1c2;
+    --accent: #0b6e75;
+    --accent-soft: #daecec;
+    --ok: #1c7a4f;
+    --ok-soft: #d8ede2;
+    --warn: #8a5a05;
+    --warn-soft: #f6e8cf;
+    --call: #1a5aa8;
+    --call-soft: #dbe7f7;
+    --bad: #a33124;
+    --bad-soft: #f6ddd9;
+    --off: #5b6b6d;
+    --off-soft: #e2e8e8;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 24px 96px;
+  }
+
+  /* ---------- cabeçalho ---------- */
+
+  .masthead {
+    border-bottom: 2px solid var(--ink);
+    padding: 56px 0 22px;
+    margin-bottom: 18px;
+  }
+
+  .doctype {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 20px;
+  }
+
+  .doctype .rule {
+    flex: 1;
+    height: 1px;
+    background: var(--line-strong);
+    min-width: 40px;
+  }
+
+  h1 {
+    font-family: var(--sans);
+    font-weight: 700;
+    letter-spacing: -0.028em;
+    font-size: clamp(2.1rem, 5.4vw, 3.15rem);
+    line-height: 1.04;
+    text-wrap: balance;
+    margin: 0 0 20px;
+  }
+
+  .standfirst {
+    font-size: 1.16rem;
+    color: var(--ink-2);
+    margin: 0 0 30px;
+    max-width: 640px;
+  }
+
+  .colophon {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px 28px;
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+  }
+
+  .colophon div { font-family: var(--sans); }
+
+  .colophon dt {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 3px;
+  }
+
+  .colophon dd { margin: 0; font-size: 14px; color: var(--ink); }
+
+  /* ---------- índice ---------- */
+
+  nav.toc {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 22px 26px;
+    margin: 40px 0 56px;
+  }
+
+  nav.toc h2 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 14px;
+    font-weight: 500;
+    border: none;
+    padding: 0;
+  }
+
+  nav.toc ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 6px 28px;
+    font-family: var(--sans);
+    font-size: 14.5px;
+  }
+
+  nav.toc a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line-strong); }
+  nav.toc a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ---------- seções ---------- */
+
+  section { margin-bottom: 68px; }
+
+  h2 {
+    font-family: var(--sans);
+    font-weight: 700;
+    letter-spacing: -0.022em;
+    font-size: clamp(1.5rem, 3vw, 1.92rem);
+    line-height: 1.15;
+    text-wrap: balance;
+    margin: 0 0 8px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  h3 {
+    font-family: var(--sans);
+    font-weight: 650;
+    font-size: 1.09rem;
+    letter-spacing: -0.012em;
+    margin: 34px 0 10px;
+  }
+
+  .kicker {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 22px;
+  }
+
+  p { margin: 0 0 18px; max-width: 660px; }
+
+  ul, ol.body-list { max-width: 660px; padding-left: 22px; margin: 0 0 18px; }
+  li { margin-bottom: 9px; }
+
+  strong { font-weight: 700; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.855em;
+    background: var(--surface-2);
+    padding: 1px 5px;
+    border-radius: 2px;
+    word-break: break-word;
+  }
+
+  a { color: var(--accent); }
+
+  /* ---------- blocos de código ---------- */
+
+  pre {
+    font-family: var(--mono);
+    font-size: 12.8px;
+    line-height: 1.6;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    padding: 16px 18px;
+    overflow-x: auto;
+    margin: 0 0 10px;
+  }
+
+  pre .cm { color: var(--ink-3); }
+
+  .caption {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--ink-3);
+    margin: 0 0 26px;
+    max-width: 660px;
+  }
+
+  /* ---------- figuras ---------- */
+
+  figure {
+    margin: 34px 0;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 22px 22px 16px;
+    overflow-x: auto;
+  }
+
+  figure svg {
+    display: block;
+    width: 100%;
+    min-width: 620px;
+    max-width: 100%;
+    height: auto;
+    color: var(--ink-2);
+  }
+
+  figcaption {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--ink-3);
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+  }
+
+  /* ---------- tabelas ---------- */
+
+  .tablewrap { overflow-x: auto; margin: 0 0 24px; }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 520px;
+    font-family: var(--sans);
+    font-size: 14.2px;
+    background: var(--surface);
+  }
+
+  th, td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+
+  th {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 500;
+    border-bottom: 1px solid var(--line-strong);
+    white-space: nowrap;
+  }
+
+  td code { background: none; padding: 0; }
+
+  tbody tr:last-child td { border-bottom: none; }
+
+  .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  /* ---------- destaques ---------- */
+
+  .note {
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    background: var(--surface);
+    padding: 18px 20px;
+    margin: 0 0 24px;
+    max-width: 660px;
+  }
+
+  .note.decide { border-left-color: var(--warn); }
+  .note.proof { border-left-color: var(--ok); }
+
+  .note-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 8px;
+  }
+
+  .note p:last-child, .note ul:last-child { margin-bottom: 0; }
+
+  .chip {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .chip.idle { background: var(--ok-soft); color: var(--ok); }
+  .chip.brk { background: var(--warn-soft); color: var(--warn); }
+  .chip.call { background: var(--call-soft); color: var(--call); }
+  .chip.off { background: var(--off-soft); color: var(--off); }
+  .chip.err { background: var(--bad-soft); color: var(--bad); }
+
+  /* ---------- capacidades ---------- */
+
+  .caps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    margin: 0 0 28px;
+  }
+
+  .cap {
+    background: var(--surface);
+    padding: 16px 18px;
+  }
+
+  .cap h4 {
+    font-family: var(--sans);
+    font-size: 14.5px;
+    margin: 0 0 5px;
+    color: var(--ink);
+  }
+
+  .cap p {
+    font-family: var(--sans);
+    font-size: 13.2px;
+    line-height: 1.5;
+    color: var(--ink-2);
+    margin: 0;
+  }
+
+  /* ---------- cartões de pacote ---------- */
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin: 0 0 28px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--accent);
+    padding: 18px 20px;
+  }
+
+  .card h4 {
+    font-family: var(--mono);
+    font-size: 13px;
+    margin: 0 0 4px;
+    color: var(--ink);
+    word-break: break-all;
+  }
+
+  .card .where {
+    font-family: var(--sans);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--accent);
+    margin: 0 0 12px;
+  }
+
+  .card p {
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-2);
+    margin: 0;
+  }
+
+  footer {
+    border-top: 2px solid var(--ink);
+    padding-top: 20px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+    line-height: 1.7;
+  }
+
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  @media (max-width: 620px) {
+    body { font-size: 16px; }
+    .wrap { padding: 0 18px 64px; }
+    figure { padding: 14px 14px 10px; }
+  }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="doctype"><span>Documento técnico</span><span class="rule"></span><span>Plataforma Callix</span></p>
+    <h1>SDK Callix — conceitos e capacidades</h1>
+    <p class="standfirst">
+      Como o SDK embarca a telefonia da Callix dentro de uma aplicação de terceiros: arquitetura dos pacotes,
+      fluxo de autenticação, modelo de estados do operador, escopo de cobertura e pré-requisitos de integração.
+    </p>
+    <dl class="colophon">
+      <div><dt>Versão do SDK</dt><dd>client 1.0.1 · server 1.0.0</dd></div>
+      <div><dt>Público</dt><dd>Times de produto e engenharia</dd></div>
+      <div><dt>Base</dt><dd>Pacotes publicados e execução validada</dd></div>
+      <div><dt>Data</dt><dd>Agosto de 2026</dd></div>
+    </dl>
+  </header>
+
+  <nav class="toc">
+    <h2>Conteúdo</h2>
+    <ol>
+      <li><a href="#visao">O que é o SDK</a></li>
+      <li><a href="#capacidades">Capacidades</a></li>
+      <li><a href="#problema">O problema que resolve</a></li>
+      <li><a href="#pacotes">Arquitetura de pacotes</a></li>
+      <li><a href="#topologia">Arquitetura de integração</a></li>
+      <li><a href="#estados">Modelo de estados</a></li>
+      <li><a href="#integracao">A integração em três blocos</a></li>
+      <li><a href="#glossario">Glossário</a></li>
+      <li><a href="#escopo">Escopo e limites</a></li>
+      <li><a href="#decisoes">Comportamentos que exigem decisão</a></li>
+      <li><a href="#prerequisitos">Pré-requisitos e questões de escopo</a></li>
+      <li><a href="#validacao">Validação</a></li>
+    </ol>
+  </nav>
+
+  <!-- ============================================ -->
+  <section id="visao">
+    <h2>O que é o SDK</h2>
+    <p class="kicker">Definição</p>
+
+    <p>
+      O SDK da Callix coloca o telefone dentro da aplicação do cliente. O agente atende, disca, coloca em espera
+      e qualifica a chamada sem sair da tela onde já trabalha — e o áudio trafega pelo próprio browser, sem
+      instalação de softphone, plugin ou VPN na máquina dele.
+    </p>
+
+    <p>
+      Tecnicamente, é um <em>softphone WebRTC</em> distribuído como biblioteca, com uma máquina de estados de
+      operador em volta. A aplicação parceira constrói a interface que quiser; a Callix entrega a telefonia, o
+      estado do agente e o contexto da chamada.
+    </p>
+
+    <div class="note">
+      <p class="note-label">A divisão de responsabilidades</p>
+      <p>
+        A aplicação parceira assume a construção da interface de atendimento e, com isso, ganha o controle total
+        dela — o que aparece na tela durante a chamada, onde o telefone fica, o que é gravado no banco próprio
+        quando a ligação termina. A Callix assume a telefonia, a máquina de estados e o contexto operacional.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <section id="capacidades">
+    <h2>Capacidades</h2>
+    <p class="kicker">O que a integração passa a ter</p>
+
+    <div class="caps">
+      <div class="cap">
+        <h4>Voz no browser</h4>
+        <p>Chamada de entrada e de saída por WebRTC, sem instalar nada na estação do agente.</p>
+      </div>
+      <div class="cap">
+        <h4>Estado do operador</h4>
+        <p>Disponível, em pausa, offline, tocando, em chamada, pós-atendimento — empurrado em tempo real.</p>
+      </div>
+      <div class="cap">
+        <h4>Controles de chamada</h4>
+        <p>Atender, rejeitar, desligar, colocar e tirar de espera, mudo de entrada e de saída, volume.</p>
+      </div>
+      <div class="cap">
+        <h4>Contexto de campanha</h4>
+        <p>Campanha, lista e contato da chamada ativa, estruturados, prontos para casar com o cadastro próprio.</p>
+      </div>
+      <div class="cap">
+        <h4>Pausas do tenant</h4>
+        <p>As pausas configuradas na plataforma chegam prontas, com id e nome, para montar o seletor.</p>
+      </div>
+      <div class="cap">
+        <h4>Qualificação</h4>
+        <p>Listas de qualificação de sucesso e de descarte, e o encerramento do pós-atendimento.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <section id="problema">
+    <h2>O problema que resolve</h2>
+    <p class="kicker">Contexto operacional</p>
+
+    <p>
+      Sem SDK, o agente opera em duas telas: o sistema onde estão o cliente e o histórico, e a tela de operação
+      da Callix, onde está o telefone. Ele copia número de um lado para o outro, alterna janelas durante a
+      ligação e registra o desfecho duas vezes — uma na qualificação da Callix, outra no sistema próprio. Erro
+      de digitação e registro esquecido nascem nessa fronteira.
+    </p>
+
+    <figure>
+      <svg viewBox="0 0 940 300" role="img" aria-label="Comparação entre operar em duas telas separadas e operar com o softphone embutido dentro do sistema do parceiro">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor" />
+          </marker>
+          <marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)" />
+          </marker>
+        </defs>
+
+        <text x="20" y="26" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="currentColor" letter-spacing="1.4">SEM SDK</text>
+        <text x="520" y="26" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="var(--accent)" letter-spacing="1.4">COM O SDK</text>
+
+        <line x1="480" y1="10" x2="480" y2="290" stroke="currentColor" stroke-width="1" stroke-dasharray="3 5" opacity="0.45" />
+
+        <rect x="20" y="52" width="190" height="128" fill="none" stroke="currentColor" stroke-width="1.5" />
+        <rect x="20" y="52" width="190" height="20" fill="currentColor" opacity="0.12" />
+        <text x="115" y="66" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11.5" fill="currentColor">Sistema do parceiro</text>
+        <text x="115" y="110" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12.5" fill="currentColor">cliente, histórico,</text>
+        <text x="115" y="128" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12.5" fill="currentColor">contrato, ticket</text>
+
+        <rect x="270" y="52" width="190" height="128" fill="none" stroke="currentColor" stroke-width="1.5" />
+        <rect x="270" y="52" width="190" height="20" fill="currentColor" opacity="0.12" />
+        <text x="365" y="66" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11.5" fill="currentColor">Tela da Callix</text>
+        <text x="365" y="110" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12.5" fill="currentColor">telefone, pausas,</text>
+        <text x="365" y="128" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12.5" fill="currentColor">qualificação</text>
+
+        <path d="M 214 100 L 266 100" stroke="currentColor" stroke-width="1.4" marker-end="url(#ah)" />
+        <path d="M 266 140 L 214 140" stroke="currentColor" stroke-width="1.4" marker-end="url(#ah)" />
+        <text x="240" y="92" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="currentColor">copia nº</text>
+        <text x="240" y="160" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="currentColor">alt-tab</text>
+
+        <text x="20" y="210" font-family="system-ui, sans-serif" font-size="12.5" fill="currentColor">O agente é a integração:</text>
+        <text x="20" y="230" font-family="system-ui, sans-serif" font-size="12.5" fill="currentColor">dois logins, dois registros do</text>
+        <text x="20" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="currentColor">mesmo atendimento, dados que</text>
+        <text x="20" y="270" font-family="system-ui, sans-serif" font-size="12.5" fill="currentColor">não se encontram.</text>
+
+        <rect x="520" y="52" width="390" height="128" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+        <rect x="520" y="52" width="390" height="20" fill="var(--accent)" opacity="0.14" />
+        <text x="715" y="66" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11.5" fill="var(--accent)">Sistema do parceiro</text>
+        <text x="600" y="112" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12.5" fill="currentColor">cliente, histórico,</text>
+        <text x="600" y="130" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12.5" fill="currentColor">contrato, ticket</text>
+
+        <rect x="770" y="84" width="122" height="82" fill="var(--accent)" opacity="0.13" stroke="var(--accent)" stroke-width="1.4" />
+        <text x="831" y="110" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="var(--accent)">SDK</text>
+        <text x="831" y="130" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="currentColor">telefone +</text>
+        <text x="831" y="147" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="currentColor">estado</text>
+
+        <path d="M 700 125 L 762 125" stroke="var(--accent)" stroke-width="1.4" marker-end="url(#ah2)" />
+
+        <text x="520" y="210" font-family="system-ui, sans-serif" font-size="12.5" fill="currentColor">Uma tela só. O parceiro decide onde</text>
+        <text x="520" y="230" font-family="system-ui, sans-serif" font-size="12.5" fill="currentColor">o telefone fica, o que aparece durante</text>
+        <text x="520" y="250" font-family="system-ui, sans-serif" font-size="12.5" fill="currentColor">a chamada e o que grava no próprio</text>
+        <text x="520" y="270" font-family="system-ui, sans-serif" font-size="12.5" fill="currentColor">banco quando ela termina.</text>
+      </svg>
+      <figcaption>
+        A diferença não é estética: sem SDK, o agente humano é o mecanismo de integração entre os dois sistemas.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ============================================ -->
+  <section id="pacotes">
+    <h2>Arquitetura de pacotes</h2>
+    <p class="kicker">Três bibliotecas publicadas no npm sob <code>@callixbrasil</code></p>
+
+    <p>
+      Um <em>pacote</em> é uma biblioteca que o desenvolvedor instala com um comando e passa a usar no próprio
+      código. São três, e a divisão não é arbitrária: cada um roda num lugar diferente, e é isso que mantém a
+      chave de API fora do browser.
+    </p>
+
+    <div class="cards">
+      <div class="card">
+        <h4>@callixbrasil/server-sdk</h4>
+        <p class="where">Roda no servidor do parceiro</p>
+        <p>
+          Faz uma coisa só: troca a chave de API por um <em>token de sessão</em> de um usuário. É o único pedaço
+          que conhece o segredo. Superfície mínima — uma classe, um método.
+        </p>
+      </div>
+      <div class="card">
+        <h4>@callixbrasil/client-sdk</h4>
+        <p class="where">Roda no browser do agente</p>
+        <p>
+          O núcleo. Registra o softphone (SIP/WebRTC), mantém a máquina de estados do operador, expõe a chamada
+          atual, as pausas e as qualificações. Não depende de framework.
+        </p>
+      </div>
+      <div class="card">
+        <h4>@callixbrasil/client-sdk-react</h4>
+        <p class="where">Camada opcional, para quem usa React</p>
+        <p>
+          Empacota o núcleo em 17 <em>hooks</em> e um <em>provider</em>. É conveniência: quem não usa React fala
+          direto com o núcleo, que expõe o mesmo estado por assinatura.
+        </p>
+      </div>
+    </div>
+
+    <div class="note">
+      <p class="note-label">Sobre a exigência de framework</p>
+      <p>
+        <strong>React não é obrigatório.</strong> O pacote <code>client-sdk</code> exporta a classe
+        <code>CallixClientSdk</code> e os <em>signals</em> de estado (<code>.get()</code> e
+        <code>.subscribe()</code>), o que permite consumo a partir de Angular, Vue, Svelte ou JavaScript puro.
+        A ressalva: documentação e exemplos oficiais cobrem React, então esse é o caminho mais curto — quem já
+        usa React reduz bastante o esforço de integração.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <section id="topologia">
+    <h2>Arquitetura de integração</h2>
+    <p class="kicker">A fronteira de confiança e o caminho do áudio</p>
+
+    <p>
+      Quatro atores e uma linha que a chave de API nunca cruza. O áudio não passa pelo servidor do parceiro —
+      vai direto do browser do agente para a plataforma.
+    </p>
+
+    <figure>
+      <svg viewBox="0 0 980 570" role="img" aria-label="Topologia: o servidor do parceiro troca a chave de API por um token de sessão na API da Callix, entrega o token ao browser, e o browser abre o canal de voz e eventos direto com a plataforma Callix">
+        <defs>
+          <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor" />
+          </marker>
+          <marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)" />
+          </marker>
+        </defs>
+
+        <rect x="20" y="50" width="380" height="210" fill="none" stroke="currentColor" stroke-width="1" opacity="0.45" />
+        <text x="28" y="40" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="currentColor" letter-spacing="1.2">INFRA DO PARCEIRO</text>
+
+        <rect x="20" y="306" width="380" height="234" fill="none" stroke="currentColor" stroke-width="1" opacity="0.45" />
+        <text x="28" y="296" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="currentColor" letter-spacing="1.2">MÁQUINA DO AGENTE — BROWSER</text>
+
+        <rect x="600" y="50" width="360" height="490" fill="none" stroke="var(--accent)" stroke-width="1" opacity="0.7" />
+        <text x="608" y="40" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="var(--accent)" letter-spacing="1.2">PLATAFORMA CALLIX</text>
+
+        <rect x="48" y="85" width="324" height="70" fill="currentColor" opacity="0.06" />
+        <rect x="48" y="85" width="324" height="70" fill="none" stroke="currentColor" stroke-width="1.4" />
+        <text x="210" y="112" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="currentColor">server-sdk</text>
+        <text x="210" y="134" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12.5" fill="currentColor">backend do parceiro</text>
+
+        <rect x="48" y="180" width="324" height="56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-dasharray="4 3" />
+        <text x="210" y="203" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11.5" fill="currentColor">CALLIX_API_KEY</text>
+        <text x="210" y="222" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11.5" fill="currentColor" opacity="0.75">segredo — não sai daqui</text>
+
+        <rect x="48" y="340" width="324" height="120" fill="currentColor" opacity="0.06" />
+        <rect x="48" y="340" width="324" height="120" fill="none" stroke="currentColor" stroke-width="1.4" />
+        <text x="210" y="362" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12.5" fill="currentColor">tela de atendimento do parceiro</text>
+
+        <rect x="70" y="378" width="280" height="66" fill="var(--accent)" opacity="0.12" />
+        <rect x="70" y="378" width="280" height="66" fill="none" stroke="var(--accent)" stroke-width="1.5" />
+        <text x="210" y="401" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11.5" fill="var(--accent)">client-sdk</text>
+        <text x="210" y="422" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="currentColor">softphone + estado</text>
+
+        <rect x="48" y="482" width="324" height="42" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="4 3" />
+        <text x="210" y="508" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11.5" fill="currentColor" opacity="0.85">microfone e alto-falante · exige HTTPS</text>
+
+        <rect x="620" y="85" width="320" height="58" fill="none" stroke="var(--accent)" stroke-width="1.4" />
+        <text x="780" y="110" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12.5" fill="currentColor">API de sessão</text>
+        <text x="780" y="129" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11.5" fill="currentColor" opacity="0.75">valida a chave, emite o token</text>
+
+        <rect x="620" y="290" width="320" height="64" fill="none" stroke="var(--accent)" stroke-width="1.4" />
+        <text x="780" y="316" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12.5" fill="currentColor">telefonia</text>
+        <text x="780" y="336" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="currentColor" opacity="0.8">SIP · WebRTC</text>
+
+        <rect x="620" y="420" width="320" height="60" fill="none" stroke="var(--accent)" stroke-width="1.4" />
+        <text x="780" y="445" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12.5" fill="currentColor">campanhas, filas,</text>
+        <text x="780" y="464" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12.5" fill="currentColor">pausas, qualificações</text>
+
+        <path d="M 372 106 L 616 106" stroke="currentColor" stroke-width="1.5" marker-end="url(#a3)" />
+        <text x="494" y="99" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="currentColor">1 · cria a sessão (API key)</text>
+
+        <path d="M 616 132 L 376 132" stroke="currentColor" stroke-width="1.5" marker-end="url(#a3)" />
+        <text x="494" y="148" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="currentColor">2 · userSessionToken</text>
+
+        <path d="M 210 236 L 210 336" stroke="currentColor" stroke-width="1.5" marker-end="url(#a3)" />
+        <text x="222" y="284" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="currentColor">3 · só o token vai ao browser</text>
+
+        <path d="M 352 396 L 616 306" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#a4)" />
+        <text x="404" y="352" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="var(--accent)">4 · registra o softphone</text>
+
+        <path d="M 616 338 L 356 428" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#a4)" />
+        <text x="404" y="452" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="var(--accent)">5 · áudio + eventos de estado</text>
+      </svg>
+      <figcaption>
+        O passo 3 é a razão de existir do <code>server-sdk</code>: o browser recebe um token de sessão descartável,
+        nunca a chave de API. Quem obtiver o token consegue operar como aquele agente; quem obtivesse a chave de
+        API operaria como qualquer um.
+      </figcaption>
+    </figure>
+
+    <h3>Obrigações que isso impõe à aplicação parceira</h3>
+    <ul>
+      <li>Ter um <strong>backend</strong>. Não há integração segura apenas com HTML e JavaScript no browser — algum servidor precisa guardar a chave de API.</li>
+      <li>Servir a aplicação por <strong>HTTPS</strong>. O browser não libera o microfone fora de contexto seguro (<code>localhost</code> é a exceção, para desenvolvimento).</li>
+      <li>Mapear <strong>usuário da aplicação → usuário da Callix</strong>. O token é emitido para um login específico da plataforma.</li>
+    </ul>
+  </section>
+
+  <!-- ============================================ -->
+  <section id="estados">
+    <h2>Modelo de estados</h2>
+    <p class="kicker">O conceito central da integração</p>
+
+    <p>
+      Aqui está a inversão em relação a uma API REST convencional. A aplicação <strong>não pergunta</strong> se a
+      chamada foi atendida. Ela declara: <em>quando o estado for X, mostre isto</em>. O SDK empurra o estado; a
+      tela é uma consequência.
+    </p>
+
+    <p>
+      Os comandos — ficar disponível, entrar em pausa, discar, desligar — são <strong>intenções sem
+      retorno</strong>. Não devolvem sucesso nem erro. Quem confirma é a próxima transição de estado. Um comando
+      inválido no estado atual é descartado silenciosamente.
+    </p>
+
+    <figure>
+      <svg viewBox="0 0 960 470" role="img" aria-label="Máquina de estados do operador: de starting para idle automaticamente; idle troca com onBreak e offline; a chamada entra por callRinging ou pelo fluxo manual, chega a callInProgress, passa por afterCall e volta para idle">
+        <defs>
+          <marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor" />
+          </marker>
+          <marker id="a6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)" />
+          </marker>
+        </defs>
+
+        <rect x="30" y="40" width="130" height="42" fill="none" stroke="currentColor" stroke-width="1.4" />
+        <text x="95" y="66" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="currentColor">starting</text>
+
+        <rect x="240" y="40" width="130" height="42" fill="var(--accent)" opacity="0.14" />
+        <rect x="240" y="40" width="130" height="42" fill="none" stroke="var(--accent)" stroke-width="2" />
+        <text x="305" y="66" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="var(--accent)">idle</text>
+
+        <rect x="470" y="40" width="130" height="42" fill="none" stroke="currentColor" stroke-width="1.4" />
+        <text x="535" y="66" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="currentColor">onBreak</text>
+
+        <rect x="700" y="40" width="130" height="42" fill="none" stroke="currentColor" stroke-width="1.4" />
+        <text x="765" y="66" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="currentColor">offline</text>
+
+        <path d="M 160 61 L 236 61" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#a6)" />
+        <text x="198" y="52" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="var(--accent)">sozinho</text>
+
+        <path d="M 370 54 L 466 54" stroke="currentColor" stroke-width="1.4" marker-end="url(#a5)" />
+        <text x="418" y="44" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="currentColor">enterOnBreak(id)</text>
+        <path d="M 466 72 L 374 72" stroke="currentColor" stroke-width="1.4" marker-end="url(#a5)" />
+        <text x="420" y="90" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="currentColor">becomeAvailable()</text>
+
+        <path d="M 600 54 L 696 54" stroke="currentColor" stroke-width="1.4" marker-end="url(#a5)" />
+        <text x="648" y="44" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="currentColor">goOffline()</text>
+        <path d="M 696 72 L 604 72" stroke="currentColor" stroke-width="1.4" marker-end="url(#a5)" />
+        <text x="650" y="90" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="currentColor">becomeAvailable()</text>
+
+        <line x1="30" y1="126" x2="930" y2="126" stroke="currentColor" stroke-width="1" stroke-dasharray="3 5" opacity="0.4" />
+        <text x="30" y="146" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="currentColor" opacity="0.75" letter-spacing="1.1">CICLO DA CHAMADA</text>
+
+        <rect x="240" y="196" width="150" height="42" fill="none" stroke="currentColor" stroke-width="1.4" />
+        <text x="315" y="222" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="currentColor">callRinging</text>
+
+        <rect x="40" y="320" width="160" height="42" fill="none" stroke="currentColor" stroke-width="1.4" />
+        <text x="120" y="346" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="currentColor">manualCallSetup</text>
+
+        <rect x="250" y="320" width="170" height="42" fill="none" stroke="currentColor" stroke-width="1.4" />
+        <text x="335" y="346" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="currentColor">manualCallRinging</text>
+
+        <rect x="500" y="255" width="160" height="42" fill="var(--accent)" opacity="0.1" />
+        <rect x="500" y="255" width="160" height="42" fill="none" stroke="var(--accent)" stroke-width="1.6" />
+        <text x="580" y="281" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="var(--accent)">callInProgress</text>
+
+        <rect x="740" y="255" width="140" height="42" fill="none" stroke="currentColor" stroke-width="1.4" />
+        <text x="810" y="281" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="currentColor">afterCall</text>
+
+        <path d="M 320 82 L 320 192" stroke="currentColor" stroke-width="1.4" marker-end="url(#a5)" />
+        <text x="330" y="170" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="currentColor">campanha ou fila chama</text>
+
+        <path d="M 258 82 L 258 156 L 120 156 L 120 316" stroke="currentColor" stroke-width="1.4" fill="none" marker-end="url(#a5)" />
+        <text x="128" y="200" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="currentColor">makeManualCall(nº)</text>
+
+        <path d="M 200 341 L 246 341" stroke="currentColor" stroke-width="1.4" marker-end="url(#a5)" />
+        <path d="M 420 335 L 496 290" stroke="currentColor" stroke-width="1.4" marker-end="url(#a5)" />
+        <text x="440" y="330" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="currentColor">atendeu</text>
+
+        <path d="M 390 224 L 496 262" stroke="currentColor" stroke-width="1.4" marker-end="url(#a5)" />
+        <text x="404" y="232" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="currentColor">answer()</text>
+
+        <path d="M 660 276 L 736 276" stroke="currentColor" stroke-width="1.4" marker-end="url(#a5)" />
+        <text x="698" y="268" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="currentColor">hangup()</text>
+
+        <path d="M 810 297 L 810 430 L 222 430 L 222 61 L 236 61" stroke="var(--accent)" stroke-width="1.6" fill="none" marker-end="url(#a6)" />
+        <text x="516" y="447" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10.5" fill="var(--accent)">finishAfterCall({ result, qualificationId })</text>
+      </svg>
+      <figcaption>
+        Nove estados; a interface inteira é uma função de qual deles está ativo. Arestas menores ficaram de fora
+        para manter a leitura: <code>reject()</code> volta de <code>callRinging</code> para <code>idle</code>,
+        <code>goOffline()</code> vale a partir de quase todo estado, e <code>error</code> é alcançável de qualquer
+        ponto.
+      </figcaption>
+    </figure>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>Estado</th><th>Significa</th><th>O que a interface faz</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="chip off">starting</span></td><td>subindo o softphone</td><td>tela de carregamento</td></tr>
+          <tr><td><span class="chip idle">idle</span></td><td>disponível, aguardando</td><td>libera o discador</td></tr>
+          <tr><td><span class="chip brk">onBreak</span></td><td>em pausa</td><td>mostra qual pausa e o tempo</td></tr>
+          <tr><td><span class="chip off">offline</span></td><td>fora de operação</td><td>botão de ficar disponível</td></tr>
+          <tr><td><span class="chip call">callRinging</span></td><td>chamada entrante tocando</td><td>atender / rejeitar + abre a ficha do cliente</td></tr>
+          <tr><td><span class="chip call">manualCallSetup</span></td><td>montando a chamada manual</td><td>cancelar</td></tr>
+          <tr><td><span class="chip call">manualCallRinging</span></td><td>chamando o destino</td><td>cancelar</td></tr>
+          <tr><td><span class="chip call">callInProgress</span></td><td>conversa estabelecida</td><td>espera, mudo, desligar, cronômetro</td></tr>
+          <tr><td><span class="chip brk">afterCall</span></td><td>pós-atendimento</td><td>formulário de desfecho + qualificação</td></tr>
+          <tr><td><span class="chip err">error</span></td><td>falha do operador</td><td>mensagem e caminho de recuperação</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      <p class="note-label">Onde a máquina de estados executa</p>
+      <p>
+        A máquina roda <strong>no browser</strong> — o SDK embarca o <code>xstate</code> como dependência. Em
+        execução medida, a transição entre o comando e a mudança de estado leva cerca de
+        <span class="num">5&nbsp;ms</span>, rápido demais para uma ida e volta de rede. O estado local é otimista
+        e a sincronização com o backend acontece por fora. Na prática isso favorece a responsividade da
+        interface, mas significa que <em>estado na tela não é prova de estado no servidor</em>: para auditoria de
+        disponibilidade de agente, a fonte de verdade é o relatório da plataforma.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <section id="integracao">
+    <h2>A integração em três blocos</h2>
+    <p class="kicker">O restante é interface, construída pelo parceiro</p>
+
+    <p>
+      A superfície de contato com o SDK é pequena. Estes três blocos cobrem autenticação, inicialização e
+      consumo de estado; tudo além disso é a interface que a aplicação parceira já sabe construir.
+    </p>
+
+    <h3>1. No servidor: trocar a chave por um token</h3>
+    <pre><span class="cm">// roda no backend do parceiro — a chave nunca sai daqui</span>
+const callix = new CallixServerSdk(dominio, process.env.CALLIX_API_KEY);
+
+const sessao = await callix.createUserSessionForClientSdk(loginDoAgente);
+
+<span class="cm">// devolve para a tela apenas isto:</span>
+return { userSessionToken: sessao.userSessionToken };</pre>
+    <p class="caption">A autenticação do usuário da aplicação acontece antes desta linha, e é ela que determina qual login Callix pode ser operado.</p>
+
+    <h3>2. Na tela: ligar o SDK</h3>
+    <pre>&lt;CallixClientProvider domain={dominio} userSessionToken={token}&gt;
+  &lt;TelaDeAtendimento /&gt;
+&lt;/CallixClientProvider&gt;</pre>
+    <p class="caption">A partir daqui, qualquer componente dentro dessa árvore enxerga o operador.</p>
+
+    <h3>3. Em qualquer componente: ler estado e comandar</h3>
+    <pre>const estado = useCallOperatorState();        <span class="cm">// { state: 'callInProgress', call }</span>
+const { makeManualCall } = useCallOperatorControls();
+const info = useCallOperatorCurrentCallInfo(); <span class="cm">// campanha, lista, contato</span>
+
+if (estado.state === 'callRinging') return &lt;FichaDoCliente ... /&gt;;</pre>
+    <p class="caption">
+      São 17 hooks no total, cobrindo estado, controles da chamada, áudio, pausas e qualificações. Nenhum deles
+      exige conhecimento de WebRTC.
+    </p>
+  </section>
+
+  <!-- ============================================ -->
+  <section id="glossario">
+    <h2>Glossário</h2>
+    <p class="kicker">Termos que aparecem neste documento</p>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>Termo</th><th>Definição</th><th>Relevância para a integração</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>npm</code></td>
+            <td>repositório de bibliotecas do ecossistema JavaScript</td>
+            <td>é de onde os três pacotes são instalados; estão públicos</td>
+          </tr>
+          <tr>
+            <td>pacote</td>
+            <td>biblioteca versionada, instalada por um comando</td>
+            <td>atualizar o SDK é trocar um número no arquivo de dependências</td>
+          </tr>
+          <tr>
+            <td>React</td>
+            <td>biblioteca de construção de interfaces web</td>
+            <td>há um pacote dedicado a ela; sem React a integração é possível, com mais trabalho</td>
+          </tr>
+          <tr>
+            <td>hook</td>
+            <td>função que entrega um pedaço de estado vivo ao componente</td>
+            <td>é a forma de ler o estado do operador (<code>useCallOperatorState</code>)</td>
+          </tr>
+          <tr>
+            <td>provider</td>
+            <td>componente que embrulha a tela e distribui algo a tudo que está dentro</td>
+            <td><code>CallixClientProvider</code> é onde o SDK é inicializado</td>
+          </tr>
+          <tr>
+            <td>Next.js</td>
+            <td>framework que reúne backend e frontend no mesmo projeto</td>
+            <td><strong>não é requisito</strong> — é o que o exemplo oficial usa, por conveniência</td>
+          </tr>
+          <tr>
+            <td>WebRTC</td>
+            <td>padrão que permite ao browser transportar voz</td>
+            <td>dispensa a instalação de softphone e exige HTTPS</td>
+          </tr>
+          <tr>
+            <td>SIP</td>
+            <td>protocolo de sinalização de chamada (tocar, atender, desligar)</td>
+            <td>o SDK registra o agente como um ramal; a aplicação parceira não lida com isso</td>
+          </tr>
+          <tr>
+            <td>token de sessão</td>
+            <td>credencial temporária de um usuário específico</td>
+            <td>é o que trafega para o browser no lugar da chave de API</td>
+          </tr>
+          <tr>
+            <td>signal</td>
+            <td>valor que notifica os inscritos quando muda</td>
+            <td>é como o núcleo expõe estado fora do React</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <section id="escopo">
+    <h2>Escopo e limites</h2>
+    <p class="kicker">O que está e o que não está coberto</p>
+
+    <p>
+      <strong>O SDK cobre voz.</strong> Os três pacotes não expõem chat, WhatsApp, e-mail ou qualquer canal além
+      de telefonia — toda a superfície pública é telefônica. Integrações de outros canais seguem por caminhos
+      distintos da plataforma.
+    </p>
+
+    <p>Dentro de voz, a cobertura é ampla: o SDK reconhece oito tipos de chamada.</p>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Origem da chamada</th><th>Suportada</th><th>Contexto de negócio entregue</th></tr></thead>
+        <tbody>
+          <tr><td>Campanha (discador)</td><td>sim</td><td>campanha, lista e contato, estruturados</td></tr>
+          <tr><td>Manual (agente disca)</td><td>sim</td><td>qualificações disponíveis</td></tr>
+          <tr><td>Fila receptiva</td><td>sim</td><td><strong>não estruturado</strong> — id da fila em dado bruto</td></tr>
+          <tr><td>Interna (ramal a ramal)</td><td>sim</td><td>dado bruto</td></tr>
+          <tr><td>Callback, agendada, click-to-call, três pontas</td><td>sim</td><td>dado bruto</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      A assimetria relevante: <strong>chamada receptiva de fila não vem com contexto estruturado</strong>. Para
+      campanha, o SDK entrega campanha, lista e contato prontos. Para fila, entrega o identificador e cabe à
+      aplicação parceira buscar o restante. Operações majoritariamente receptivas devem prever esse trabalho
+      adicional no escopo.
+    </p>
+
+    <h3>Outros limites</h3>
+    <ul>
+      <li><strong>Não é SDK de supervisão nem de relatório.</strong> Há exatamente um evento público (<code>userSessionDropped</code>). O monitoramento da operação continua pela API e pelos relatórios da plataforma.</li>
+      <li><strong>Execução em browser.</strong> Depende de WebRTC e de microfone; não atende cenários de automação sem interface.</li>
+      <li><strong>Mobile via WebView.</strong> O exemplo React Native de referência não integra o SDK nativamente — ele carrega a aplicação web dentro de uma WebView. É um caminho funcional, distinto de um app nativo.</li>
+    </ul>
+  </section>
+
+  <!-- ============================================ -->
+  <section id="decisoes">
+    <h2>Comportamentos que exigem decisão</h2>
+    <p class="kicker">Pontos a definir no desenho da integração</p>
+
+    <div class="note decide">
+      <p class="note-label">O operador entra em operação automaticamente</p>
+      <p>
+        Ao inicializar o SDK, o operador vai de <code>starting</code> direto para <code>idle</code>, sem comando
+        explícito. Na prática, abrir a tela coloca o agente online e elegível a receber discagem de campanha. Se
+        a aba ficar aberta em segundo plano, o agente pode receber chamada sem atender, o que gera abandono e
+        afeta o resultado da campanha como um todo.
+      </p>
+      <p>
+        Não há parâmetro de inicialização para alterar esse comportamento. A abordagem é chamar
+        <code>goOffline()</code> ou <code>enterOnBreak()</code> assim que o estado deixa <code>starting</code>,
+        conforme a política de operação desejada.
+      </p>
+    </div>
+
+    <div class="note decide">
+      <p class="note-label">Uma sessão por usuário</p>
+      <p>
+        Criar uma sessão <strong>invalida as anteriores do mesmo login Callix</strong>. Duas abas da aplicação
+        competem entre si, e o uso simultâneo da tela nativa da Callix derruba a sessão do SDK. A integração
+        precisa garantir uma sessão ativa por agente e tratar o evento <code>userSessionDropped</code>,
+        comunicando a situação na interface em vez de degradar silenciosamente.
+      </p>
+    </div>
+
+    <div class="note decide">
+      <p class="note-label">Escala do controle de volume</p>
+      <p>
+        A referência do controle de volume indica a faixa <code>0–100</code>, enquanto o exemplo oficial e o
+        comportamento esperado do elemento de áudio operam em <code>0–1</code>. Recomenda-se adotar
+        <code>0–1</code> e confirmar o comportamento em teste antes de expor o controle ao agente.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <section id="prerequisitos">
+    <h2>Pré-requisitos e questões de escopo</h2>
+    <p class="kicker">O que precisa estar definido antes de estimar</p>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Questão</th><th>O que a resposta determina</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>A tela de atendimento é construída em React?</td>
+            <td>Sim → uso do pacote de hooks, caminho documentado. Não → integração pelo núcleo, sem exemplo de referência.</td>
+          </tr>
+          <tr>
+            <td>Existe backend próprio, capaz de guardar um segredo?</td>
+            <td>Pré-requisito. Sem servidor não há forma segura de emitir o token de sessão.</td>
+          </tr>
+          <tr>
+            <td>A aplicação é servida por HTTPS?</td>
+            <td>Pré-requisito. Sem contexto seguro o browser não concede acesso ao microfone.</td>
+          </tr>
+          <tr>
+            <td>Como o usuário da aplicação se relaciona com o usuário da Callix?</td>
+            <td>O token é emitido por login Callix; esse mapeamento é o ponto de partida da integração.</td>
+          </tr>
+          <tr>
+            <td>A operação é receptiva, ativa ou mista?</td>
+            <td>Ativa recebe contexto estruturado. Receptiva exige busca de contexto pela aplicação parceira.</td>
+          </tr>
+          <tr>
+            <td>O agente mantém a tela aberta durante todo o turno?</td>
+            <td>Define o tratamento do estado inicial automático e da sessão única.</td>
+          </tr>
+          <tr>
+            <td>Qual time assume a implementação?</td>
+            <td>Determina a profundidade técnica das próximas conversas e o formato do acompanhamento.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <section id="validacao">
+    <h2>Validação</h2>
+    <p class="kicker">Comportamento observado em execução</p>
+
+    <p>
+      As afirmações deste documento vêm dos pacotes publicados e de uma aplicação de demonstração construída
+      sobre o SDK 1.0.1, executada contra um tenant de homologação. A aplicação apresenta o softphone e, ao lado,
+      um registro de cada transição de estado e cada comando com marcação de milissegundos.
+    </p>
+
+    <div class="note proof">
+      <p class="note-label">Medições em tenant de homologação</p>
+      <ul>
+        <li>Emissão do token de sessão pelo servidor: <strong>HTTP 200</strong></li>
+        <li><code>starting → idle</code> em <span class="num">1,8 s</span>, sem comando explícito</li>
+        <li>Pausas configuradas no tenant carregadas automaticamente</li>
+        <li><code>enterOnBreak(id)</code>, <code>becomeAvailable()</code> e <code>goOffline()</code>: transição em <span class="num">~5 ms</span> cada</li>
+        <li>Nenhum erro de execução ou requisição falha</li>
+      </ul>
+    </div>
+
+    <p>
+      O ciclo completo de chamada foi exercitado em teste manual com discagem real: chamada estabelecida,
+      painel de chamada ativa com os dados da ligação e pós-atendimento com as qualificações configuradas no
+      tenant. Esse trecho foi verificado por operação assistida, e não por medição instrumentada como os
+      números acima.
+    </p>
+  </section>
+
+  <footer>
+    Documento técnico · Plataforma Callix · agosto de 2026<br />
+    Elaborado a partir dos pacotes publicados @callixbrasil (typings 1.0.1), do repositório de exemplos oficial
+    e da execução de uma aplicação de demonstração em ambiente de homologação.
+  </footer>
+
+</div>
+
+</body>
+</html>
