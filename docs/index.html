@@ -568,7 +568,7 @@
       <li><a href="#escopo">Escopo e limites</a></li>
       <li><a href="#decisoes">Comportamentos que exigem decisão</a></li>
       <li><a href="#prerequisitos">Pré-requisitos e questões de escopo</a></li>
-      <li><a href="#validacao">Validação</a></li>
+      <li><a href="#sobre">Sobre o conteúdo</a></li>
     </ol>
   </nav>
 
@@ -1221,35 +1221,17 @@ if (estado.state === 'callRinging') return &lt;FichaDoCliente ... /&gt;;</pre>
   </section>
 
   <!-- ============================================ -->
-  <section id="validacao">
-    <h2>Validação</h2>
-    <p class="kicker">Comportamento observado em execução</p>
+  <section id="sobre">
+    <h2>Sobre o conteúdo</h2>
+    <p class="kicker">Base do documento</p>
 
     <p>
-      As afirmações deste documento vêm dos pacotes publicados e de uma aplicação de demonstração construída
+      O conteúdo deste documento é baseado nos pacotes publicados e na <a href="https://github.com/callixbrasil/callix-sdk-playground">aplicação de demonstração</a> construída
       sobre o SDK 1.0.1, executada contra um tenant de homologação. A aplicação apresenta o softphone e, ao lado,
       um registro de cada transição de estado e cada comando com marcação de milissegundos.
     </p>
 
-    <div class="note proof">
-      <p class="note-label">Medições em tenant de homologação</p>
-      <ul>
-        <li>Emissão do token de sessão pelo servidor: <strong>HTTP 200</strong></li>
-        <li><code>starting → idle</code> em <span class="num">1,8 s</span>, sem comando explícito</li>
-        <li>Pausas configuradas no tenant carregadas automaticamente</li>
-        <li><code>enterOnBreak(id)</code>, <code>becomeAvailable()</code> e <code>goOffline()</code>: transição em <span class="num">~5 ms</span> cada</li>
-        <li>Nenhum erro de execução ou requisição falha</li>
-      </ul>
-    </div>
-
-    <p>
-      O ciclo completo de chamada foi exercitado em teste manual com discagem real: chamada estabelecida,
-      painel de chamada ativa com os dados da ligação e pós-atendimento com as qualificações configuradas no
-      tenant. Esse trecho foi verificado por operação assistida, e não por medição instrumentada como os
-      números acima.
-    </p>
   </section>
-
   <footer>
     Documento técnico · Plataforma Callix · agosto de 2026<br />
     
