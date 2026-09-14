@@ -98,7 +98,7 @@ Toda a aplicação é uma função de `useCallOperatorState().state`:
 | `idle` | disponível, aguardando chamada | discador |
 | `onBreak` | em pausa | pausa atual, discador bloqueado |
 | `offline` | desconectado do serviço | botão de ficar disponível |
-| `callRinging` | chamada de campanha tocando | atender / rejeitar |
+| `callRinging` | chamada de campanha chegando; o SDK busca o contexto e atende sozinho | "identificando contato…" |
 | `manualCallSetup` / `manualCallRinging` | chamada manual sendo montada / chamando | cancelar |
 | `callInProgress` | conversa estabelecida | espera, desligar, áudio, dados da chamada |
 | `afterCall` | pós-atendimento | resultado + qualificação |
@@ -108,6 +108,16 @@ Os comandos (`becomeAvailable`, `enterOnBreak`, `makeManualCall`, …) são **in
 retorno**: quem confirma é a transição de estado. Por isso a aplicação desabilita botões por estado e
 registra tudo no console — é a forma mais rápida de ver quando um comando foi descartado por ser inválido
 naquele estado.
+
+### Dados do contato da campanha
+
+Telefone e rótulo do contato vêm de `useCallOperatorCurrentCallInfo()` (`info.campaignContact.phoneNumber` e
+`info.campaignContact.label`), **não** do objeto `call`. A sinalização SIP da campanha só traz o id do
+telefone do contato — o número que aparece nela é um placeholder (`0000000000`). O SDK usa esse id para buscar
+o contexto logo depois de `callRinging` e atende a chamada sozinho em seguida; por isso a ficha do cliente
+deve reagir ao `currentCallInfo`, e não há botão de atender/rejeitar para chamada de campanha.
+
+O `label` só vem preenchido se o formulário da campanha tiver um **campo de rótulo** configurado.
 
 ### `useSignal`
 
