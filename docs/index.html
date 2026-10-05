@@ -440,6 +440,73 @@
   .chip.off { background: var(--off-soft); color: var(--off); }
   .chip.err { background: var(--bad-soft); color: var(--bad); }
 
+  .chip.add { background: var(--ok-soft); color: var(--ok); }
+  .chip.chg { background: var(--call-soft); color: var(--call); }
+  .chip.fix { background: var(--warn-soft); color: var(--warn); }
+
+  /* ---------- changelog (abas CSS puro, sem JS) ---------- */
+  .clog { margin: 0 0 24px; }
+  .clog > input { position: absolute; opacity: 0; pointer-events: none; }
+  .clog-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 20px;
+  }
+  .clog-tabs label {
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 7px 14px;
+    cursor: pointer;
+    color: var(--ink-3);
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: 7px 7px 0 0;
+    margin-bottom: -1px;
+    white-space: nowrap;
+  }
+  .clog-tabs label:hover { color: var(--ink); }
+  #clog-client:checked ~ .clog-tabs label[for="clog-client"],
+  #clog-react:checked ~ .clog-tabs label[for="clog-react"],
+  #clog-server:checked ~ .clog-tabs label[for="clog-server"] {
+    color: var(--accent);
+    border-color: var(--line);
+    border-bottom: 1px solid var(--surface);
+    background: var(--surface);
+  }
+  .clog-panel { display: none; }
+  #clog-client:checked ~ .clog-panel[data-for="clog-client"],
+  #clog-react:checked ~ .clog-panel[data-for="clog-react"],
+  #clog-server:checked ~ .clog-panel[data-for="clog-server"] { display: block; }
+  .clog-ver { margin: 0 0 22px; }
+  .clog-ver:last-child { margin-bottom: 0; }
+  .clog-ver h4 {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-family: var(--mono);
+    margin: 0 0 10px;
+  }
+  .clog-date { font-size: 12px; font-weight: 400; color: var(--ink-3); }
+  .clog-list { list-style: none; margin: 0; padding: 0; }
+  .clog-list li {
+    display: flex;
+    gap: 9px;
+    align-items: baseline;
+    margin: 0 0 7px;
+    line-height: 1.5;
+  }
+  .clog-list li .chip { flex-shrink: 0; }
+  .clog-pre {
+    margin: 0;
+    padding-top: 10px;
+    border-top: 1px dashed var(--line);
+    font-size: 13px;
+    color: var(--ink-3);
+    font-style: italic;
+  }
+
   /* ---------- capacidades ---------- */
 
   .caps {
@@ -550,7 +617,7 @@
       <div><dt>Versão do SDK</dt><dd>client 1.3.0 · server 1.0.0</dd></div>
       <div><dt>Público</dt><dd>Times de produto e engenharia</dd></div>
       <div><dt>Aplicação de referência</dt><dd><a href="https://github.com/callixbrasil/callix-sdk-playground">callix-sdk-playground</a></dd></div>
-      <div><dt>Data</dt><dd>Setembro de 2026</dd></div>
+      <div><dt>Data</dt><dd>Outubro de 2026</dd></div>
     </dl>
   </header>
 
@@ -569,6 +636,7 @@
       <li><a href="#decisoes">Comportamentos que exigem decisão</a></li>
       <li><a href="#prerequisitos">Pré-requisitos e questões de escopo</a></li>
       <li><a href="#sobre">Sobre o conteúdo</a></li>
+      <li><a href="#changelog">Changelog</a></li>
     </ol>
   </nav>
 
@@ -1236,8 +1304,103 @@ if (info?.type === 'campaign') return &lt;FichaDoCliente contato={info.info.camp
     </p>
 
   </section>
+
+  <!-- ============================================ -->
+  <section id="changelog">
+    <h2>Changelog</h2>
+    <p class="kicker">O que mudou em cada pacote</p>
+
+    <div class="clog">
+      <input type="radio" name="clog" id="clog-client" checked>
+      <input type="radio" name="clog" id="clog-react">
+      <input type="radio" name="clog" id="clog-server">
+
+      <div class="clog-tabs">
+        <label for="clog-client">client-sdk</label>
+        <label for="clog-react">client-sdk-react</label>
+        <label for="clog-server">server-sdk</label>
+      </div>
+
+      <div class="clog-panel" data-for="clog-client">
+        <div class="clog-ver">
+          <h4>1.3.0 <span class="clog-date">2026-09-25</span></h4>
+          <ul class="clog-list">
+            <li><span class="chip add">adicionado</span> <span>Campo <code>fields</code> no <code>campaignContact</code>, com todos os campos do contato (<code>code</code>, <code>name</code>, <code>type</code>, <code>value</code>, <code>requiredOnCall</code>, <code>label</code>), vindos da lista ou do formulário de clientes. Enum <code>FieldType</code> e tipo <code>CampaignContactField</code> expostos publicamente.</span></li>
+            <li><span class="chip chg">alterado</span> <span>O <code>label</code> do contato passa a ser opcional — só vem quando há um campo marcado como rótulo.</span></li>
+            <li><span class="chip fix">corrigido</span> <span><code>label</code> do contato preenchido também em campanhas de clientes.</span></li>
+          </ul>
+        </div>
+        <div class="clog-ver">
+          <h4>1.2.0 <span class="clog-date">2026-09-10</span></h4>
+          <ul class="clog-list">
+            <li><span class="chip fix">corrigido</span> <span>Heartbeat deixa de rodar enquanto o user agent não está pronto e o operador não está em execução.</span></li>
+          </ul>
+        </div>
+        <div class="clog-ver">
+          <h4>1.1.0 <span class="clog-date">2026-08-18</span></h4>
+          <ul class="clog-list">
+            <li><span class="chip add">adicionado</span> <span>Sinal <code>startupError</code> com o motivo da falha de inicialização do operador; tipo <code>CallOperatorStartupError</code> exposto publicamente.</span></li>
+            <li><span class="chip fix">corrigido</span> <span>Conexão SIP verificada antes de marcar o usuário como disponível.</span></li>
+          </ul>
+        </div>
+        <div class="clog-ver">
+          <h4>1.0.1 <span class="clog-date">2026-08-05</span></h4>
+          <ul class="clog-list">
+            <li><span class="chip fix">corrigido</span> <span>Desconexão do SIP garantida ao chamar <code>goOffline</code>.</span></li>
+          </ul>
+        </div>
+        <div class="clog-ver">
+          <h4>1.0.0 <span class="clog-date">2026-08-03</span></h4>
+          <ul class="clog-list">
+            <li><span class="chip chg">alterado</span> <span>Primeira versão estável do pacote.</span></li>
+          </ul>
+        </div>
+        <p class="clog-pre">Histórico anterior a 1.0.0: andaimento e pré-lançamento do pacote.</p>
+      </div>
+
+      <div class="clog-panel" data-for="clog-react">
+        <div class="clog-ver">
+          <h4>1.1.1 <span class="clog-date">2026-09-25</span></h4>
+          <ul class="clog-list">
+            <li><span class="chip chg">alterado</span> <span>Documentação de <code>useCallOperatorCurrentCallInfo</code> atualizada com o novo campo <code>fields</code> do contato (a partir do <code>client-sdk</code> 1.3.0).</span></li>
+          </ul>
+        </div>
+        <div class="clog-ver">
+          <h4>1.1.0 <span class="clog-date">2026-08-18</span></h4>
+          <ul class="clog-list">
+            <li><span class="chip add">adicionado</span> <span>Hook <code>useCallOperatorStartupError</code>, com acesso direto ao motivo da falha na inicialização.</span></li>
+            <li><span class="chip chg">alterado</span> <span>Estado <code>error</code> substituído por <code>startupError</code> (com o motivo da falha) e <code>manualCallFailed</code>, que passa a representar a falha de uma chamada manual separadamente.</span></li>
+          </ul>
+        </div>
+        <div class="clog-ver">
+          <h4>1.0.1 <span class="clog-date">2026-08-05</span></h4>
+          <ul class="clog-list">
+            <li><span class="chip add">adicionado</span> <span>Hook <code>useCallOperatorCurrentBreak</code> para acompanhar a pausa ativa.</span></li>
+            <li><span class="chip chg">alterado</span> <span>Campo <code>break</code> de <code>CallOperatorState</code> tornado opcional.</span></li>
+          </ul>
+        </div>
+        <div class="clog-ver">
+          <h4>1.0.0 <span class="clog-date">2026-08-03</span></h4>
+          <ul class="clog-list">
+            <li><span class="chip chg">alterado</span> <span>Primeira versão estável do pacote.</span></li>
+          </ul>
+        </div>
+        <p class="clog-pre">Histórico anterior a 1.0.0: andaimento e pré-lançamento do pacote.</p>
+      </div>
+
+      <div class="clog-panel" data-for="clog-server">
+        <div class="clog-ver">
+          <h4>1.0.0 <span class="clog-date">2026-08-03</span></h4>
+          <ul class="clog-list">
+            <li><span class="chip chg">alterado</span> <span>Primeira versão estável do pacote.</span></li>
+          </ul>
+        </div>
+        <p class="clog-pre">Histórico anterior a 1.0.0: criação do pacote e da classe <code>CallixServerSdk</code> (<code>createUserSessionForClientSdk</code>).</p>
+      </div>
+    </div>
+  </section>
   <footer>
-    Documento técnico · Plataforma Callix · agosto de 2026<br />
+    Documento técnico · Plataforma Callix · Outubro de 2026<br />
     
   </footer>
 
