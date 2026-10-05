@@ -20,7 +20,8 @@ const STATE_LABELS: Record<string, string> = {
   manualCallRinging: 'Tocando',
   callInProgress: 'Em chamada',
   afterCall: 'Pós-atendimento',
-  error: 'Erro',
+  manualCallFailed: 'Chamada falhou',
+  startupError: 'Erro',
 };
 
 /** cor semântica por estado: [texto, fundo, ponto] */
@@ -34,7 +35,8 @@ const STATE_TONE: Record<string, string> = {
   manualCallRinging: 'text-cx-teal bg-cx-teal/10 ring-cx-teal/30',
   callInProgress: 'text-cx-teal bg-cx-teal/10 ring-cx-teal/30',
   afterCall: 'text-violet-300 bg-violet-400/10 ring-violet-400/25',
-  error: 'text-rose-300 bg-rose-400/10 ring-rose-400/25',
+  manualCallFailed: 'text-rose-300 bg-rose-400/10 ring-rose-400/25',
+  startupError: 'text-rose-300 bg-rose-400/10 ring-rose-400/25',
 };
 
 const DOT_TONE: Record<string, string> = {
@@ -47,7 +49,8 @@ const DOT_TONE: Record<string, string> = {
   manualCallRinging: 'bg-cx-teal',
   callInProgress: 'bg-cx-teal',
   afterCall: 'bg-violet-400',
-  error: 'bg-rose-400',
+  manualCallFailed: 'bg-rose-400',
+  startupError: 'bg-rose-400',
 };
 
 const LIVE_STATES = ['starting', 'callRinging', 'manualCallSetup', 'manualCallRinging'];
@@ -127,7 +130,7 @@ export function OperatorWorkspace() {
 
       {state === 'afterCall' && <AfterCallPanel />}
 
-      {state === 'error' && (
+      {state === 'startupError' && (
         <div className="panel border-rose-500/30 p-5">
           <p className="label mb-2 text-rose-400/80">Erro</p>
           <p className="text-sm text-cx-muted">

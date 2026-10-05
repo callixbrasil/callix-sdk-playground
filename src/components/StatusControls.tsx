@@ -12,7 +12,7 @@ import { CheckIcon, CoffeeIcon, PowerIcon } from './icons';
 import { useSdkConsole } from '@/lib/sdk-console';
 
 /** Estados em que cada comando é aceito pela máquina de estados do operador. */
-const ACCEPTS_BECOME_AVAILABLE = ['offline', 'onBreak', 'error'];
+const ACCEPTS_BECOME_AVAILABLE = ['offline', 'onBreak', 'startupError'];
 const ACCEPTS_ENTER_ON_BREAK = ['idle', 'offline'];
 
 export function StatusControls() {

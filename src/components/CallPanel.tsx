@@ -1,6 +1,11 @@
 "use client";
 
-import type { Call, CallData } from "@callixbrasil/client-sdk";
+import type {
+  Call,
+  CallData,
+  CampaignContactField,
+} from "@callixbrasil/client-sdk";
+import { FieldType } from "@callixbrasil/client-sdk";
 import {
   useCallOperatorAudioInputMuted,
   useCallOperatorAudioOutputMuted,
@@ -387,11 +392,70 @@ function CallInfo() {
           value={`${campaignList.name} · ${campaignList.id}`}
         />
         {campaignContact && (
-          <Row label="Contato" value={campaignContact.label} />
+          <Row label="Contato" value={campaignContact.label ?? "—"} />
         )}
         {campaignContact && (
           <Row label="Telefone" value={campaignContact.phoneNumber} />
         )}
+      </dl>
+
+      {campaignContact && campaignContact.fields.length > 0 && (
+        <ContactFields fields={campaignContact.fields} />
+      )}
+    </div>
+  );
+}
+
+const FIELD_TYPE_LABELS: Record<FieldType, string> = {
+  [FieldType.Text]: "texto",
+  [FieldType.Date]: "data",
+  [FieldType.Number]: "número",
+  [FieldType.Textarea]: "texto longo",
+  [FieldType.Phone]: "telefone",
+  [FieldType.CPF]: "CPF",
+  [FieldType.CNPJ]: "CNPJ",
+  [FieldType.Table]: "tabela",
+  [FieldType.List]: "lista",
+  [FieldType.DateTime]: "data e hora",
+  [FieldType.Time]: "hora",
+  [FieldType.Email]: "e-mail",
+  [FieldType.Decimal]: "decimal",
+  [FieldType.Company]: "empresa",
+  [FieldType.MetaUserId]: "id de usuário",
+  [FieldType.MetaDisplayName]: "nome de exibição",
+};
+
+// Os campos do contato chegam no campaignContact a partir do client-sdk 1.3.0.
+// Antes só havia label e phoneNumber; agora a lista traz cada campo da campanha
+// (ou do formulário de clientes) com tipo, valor e as flags requiredOnCall/label.
+function ContactFields({ fields }: { fields: CampaignContactField[] }) {
+  return (
+    <div className="mt-4 border-t border-cx-line pt-3">
+      <p className="label mb-2.5">Campos do contato</p>
+      <dl className="space-y-2 text-xs">
+        {fields.map((field) => (
+          <div key={field.code} className="flex items-baseline justify-between gap-3">
+            <dt className="flex min-w-0 items-center gap-1.5 text-cx-dim">
+              <span className="truncate">{field.name}</span>
+              <span className="shrink-0 rounded bg-cx-line/60 px-1 font-mono text-[9px] uppercase tracking-wide text-cx-dim">
+                {FIELD_TYPE_LABELS[field.type]}
+              </span>
+              {field.label && (
+                <span className="shrink-0 rounded bg-cx-line/60 px-1 font-mono text-[9px] uppercase tracking-wide text-cx-dim">
+                  rótulo
+                </span>
+              )}
+              {field.requiredOnCall && (
+                <span className="shrink-0 rounded bg-cx-line/60 px-1 font-mono text-[9px] uppercase tracking-wide text-cx-dim">
+                  obrigatório
+                </span>
+              )}
+            </dt>
+            <dd className="truncate text-right font-mono text-cx-muted">
+              {field.value ?? "—"}
+            </dd>
+          </div>
+        ))}
       </dl>
     </div>
   );

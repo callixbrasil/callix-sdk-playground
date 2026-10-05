@@ -547,7 +547,7 @@
       fluxo de autenticação, modelo de estados do operador, escopo de cobertura e pré-requisitos de integração.
     </p>
     <dl class="colophon">
-      <div><dt>Versão do SDK</dt><dd>client 1.0.1 · server 1.0.0</dd></div>
+      <div><dt>Versão do SDK</dt><dd>client 1.3.0 · server 1.0.0</dd></div>
       <div><dt>Público</dt><dd>Times de produto e engenharia</dd></div>
       <div><dt>Aplicação de referência</dt><dd><a href="https://github.com/callixbrasil/callix-sdk-playground">callix-sdk-playground</a></dd></div>
       <div><dt>Data</dt><dd>Agosto de 2026</dd></div>
@@ -619,7 +619,7 @@
       </div>
       <div class="cap">
         <h4>Contexto de campanha</h4>
-        <p>Campanha, lista e contato da chamada ativa, estruturados, prontos para casar com o cadastro próprio.</p>
+        <p>A chamada de campanha chega com o contato já resolvido: campanha, lista e todos os campos do contato — cada um com nome, tipo e valor, vindos da lista ou do formulário de clientes. Boa parte da ficha vem pronta; o cadastro próprio entra só para complementar.</p>
       </div>
       <div class="cap">
         <h4>Pausas do tenant</h4>
@@ -944,8 +944,9 @@
       <figcaption>
         Nove estados; a interface inteira é uma função de qual deles está ativo. Arestas menores ficaram de fora
         para manter a leitura: <code>callRinging</code> volta para <code>idle</code> se a chamada cair antes de ser atendida,
-        <code>goOffline()</code> vale a partir de quase todo estado, e <code>error</code> é alcançável de qualquer
-        ponto.
+        <code>goOffline()</code> vale a partir de quase todo estado, e as falhas aparecem como
+        <code>startupError</code> (na inicialização) ou <code>manualCallFailed</code> (chamada manual que não
+        completa).
       </figcaption>
     </figure>
 
@@ -964,7 +965,8 @@
           <tr><td><span class="chip call">manualCallRinging</span></td><td>chamando o destino</td><td>cancelar</td></tr>
           <tr><td><span class="chip call">callInProgress</span></td><td>conversa estabelecida</td><td>espera, mudo, desligar, cronômetro</td></tr>
           <tr><td><span class="chip brk">afterCall</span></td><td>pós-atendimento</td><td>formulário de desfecho + qualificação</td></tr>
-          <tr><td><span class="chip err">error</span></td><td>falha do operador</td><td>mensagem e caminho de recuperação</td></tr>
+          <tr><td><span class="chip err">manualCallFailed</span></td><td>chamada manual não completou</td><td>mensagem e volta para idle</td></tr>
+          <tr><td><span class="chip err">startupError</span></td><td>falha ao iniciar o operador</td><td>mensagem e caminho de recuperação</td></tr>
         </tbody>
       </table>
     </div>
@@ -1013,7 +1015,8 @@ return { userSessionToken: sessao.userSessionToken };</pre>
 const { makeManualCall } = useCallOperatorControls();
 const info = useCallOperatorCurrentCallInfo(); <span class="cm">// campanha, lista, contato</span>
 
-<span class="cm">// telefone e rótulo do contato vêm daqui, não de call.data — chega logo após callRinging</span>
+<span class="cm">// telefone, rótulo e os campos do contato vêm daqui, não de call.data — chega logo após callRinging</span>
+<span class="cm">// campaignContact.fields: cada campo com code, name, type (FieldType), value, requiredOnCall e label</span>
 if (info?.type === 'campaign') return &lt;FichaDoCliente contato={info.info.campaignContact} /&gt;;</pre>
     <p class="caption">
       São 17 hooks no total, cobrindo estado, controles da chamada, áudio, pausas e qualificações. Nenhum deles
@@ -1228,7 +1231,7 @@ if (info?.type === 'campaign') return &lt;FichaDoCliente contato={info.info.camp
 
     <p>
       O conteúdo deste documento é baseado nos pacotes publicados e na <a href="https://github.com/callixbrasil/callix-sdk-playground">aplicação de demonstração</a> construída
-      sobre o SDK 1.0.1, executada contra um tenant de homologação. A aplicação apresenta o softphone e, ao lado,
+      sobre o SDK 1.3.0, executada contra um tenant de homologação. A aplicação apresenta o softphone e, ao lado,
       um registro de cada transição de estado e cada comando com marcação de milissegundos.
     </p>
 
