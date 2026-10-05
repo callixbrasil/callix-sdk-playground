@@ -17,7 +17,7 @@ a integração a clientes e parceiros.
 
 Relacionado: [callixbrasil/callix-sdk-examples](https://github.com/callixbrasil/callix-sdk-examples) —
 exemplos de referência oficiais. Este repositório é uma aplicação de demonstração independente, sobre a
-versão **1.0.1** do SDK.
+versão **1.3.0** do SDK.
 
 ---
 
@@ -102,7 +102,8 @@ Toda a aplicação é uma função de `useCallOperatorState().state`:
 | `manualCallSetup` / `manualCallRinging` | chamada manual sendo montada / chamando | cancelar |
 | `callInProgress` | conversa estabelecida | espera, desligar, áudio, dados da chamada |
 | `afterCall` | pós-atendimento | resultado + qualificação |
-| `error` | falha do operador | mensagem de erro |
+| `manualCallFailed` | chamada manual não completou | mensagem e volta para `idle` |
+| `startupError` | falha ao iniciar o operador | mensagem de erro |
 
 Os comandos (`becomeAvailable`, `enterOnBreak`, `makeManualCall`, …) são **intenções assíncronas e sem
 retorno**: quem confirma é a transição de estado. Por isso a aplicação desabilita botões por estado e
@@ -117,7 +118,18 @@ telefone do contato — o número que aparece nela é um placeholder (`000000000
 o contexto logo depois de `callRinging` e atende a chamada sozinho em seguida; por isso a ficha do cliente
 deve reagir ao `currentCallInfo`, e não há botão de atender/rejeitar para chamada de campanha.
 
-O `label` só vem preenchido se o formulário da campanha tiver um **campo de rótulo** configurado.
+O `label` é opcional (`info.campaignContact.label?`): só vem preenchido quando a lista da campanha tem um
+**campo marcado como rótulo**.
+
+A partir do SDK 1.3.0, o `campaignContact` também traz `fields` — a lista de **todos os campos do contato**,
+vindos da lista da campanha ou do formulário de clientes. Cada item é um `CampaignContactField` com `code`,
+`name`, `type` (enum `FieldType`), `value` (string ou `null` quando vazio), `requiredOnCall` e `label`. É o
+que permite montar a ficha completa direto do SDK; o `CallPanel` renderiza esses campos no bloco "Campos do
+contato".
+
+Tudo isso existe **só em chamada de campanha** (`info.type === 'campaign'`). A chamada manual é
+`ManualCallInfo` — sem `campaignContact` e sem `fields`: o agente disca um número solto, que o SDK não resolve
+para um cadastro de contato.
 
 ### `useSignal`
 
